@@ -30,7 +30,7 @@ Planned Features:
 - Version Control: Git and GitHub
 
 ## Project Structure
-'''text
+
 eventflow/
 ├── apps/
 │   ├── users/
@@ -42,7 +42,7 @@ eventflow/
 │   └── wsgi.py
 ├── manage.py
 └── requirements.txt
-text'''
+
 
 
 ## Setup Instructions
