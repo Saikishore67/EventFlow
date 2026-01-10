@@ -31,17 +31,19 @@ Planned Features:
 
 ## Project Structure
 
+```text
 eventflow/
 ├── apps/
-│ ├── users/
-│ ├── events/
-│ └── registrations/
+│   ├── users/
+│   ├── events/
+│   └── registrations/
 ├── config/
-│ ├── settings/
-│ ├── urls.py
-│ └── wsgi.py
+│   ├── settings/
+│   ├── urls.py
+│   └── wsgi.py
 ├── manage.py
 └── requirements.txt
+
 
 
 ## Setup Instructions
