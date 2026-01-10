@@ -31,7 +31,6 @@ Planned Features:
 
 ## Project Structure
 
-```text
 eventflow/
 ├── apps/
 │   ├── users/
