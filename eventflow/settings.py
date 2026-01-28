@@ -43,9 +43,12 @@ INSTALLED_APPS = [
     # # local apps
     'apps.accounts',
     'apps.events',
-    # 'apps.registrations',
+    'apps.registrations',
     # 'apps.notifications',
     # 'apps.core',
+
+    'drf_spectacular',
+    'django_filters',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -131,3 +134,40 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ),
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'EventFlow API',
+    'DESCRIPTION': 'Backend API for EventFlow',
+    'VERSION': '1.0.0',
+
+    'SECURITY': [{'BearerAuth': []}],
+    'COMPONENTS': {
+        'securitySchemes': {
+            'BearerAuth': {
+                'type': 'http',
+                'scheme': 'bearer',
+                'bearerFormat': 'JWT',
+            }
+        }
+    },
+}
