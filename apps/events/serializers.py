@@ -19,3 +19,12 @@ class EventSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = ["id", "organizer", "created_at", "updated_at"]
+
+class EventMiniSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = {
+            'id',
+            'title',
+            'date',
+        }
