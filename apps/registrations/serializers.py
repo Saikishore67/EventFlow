@@ -1,6 +1,8 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from .models import Registration
 from apps.events.serializers import EventMiniSerializer
+from django.db import IntegrityError
 
 
 # which user is attending what event and what is the status 
@@ -25,12 +27,14 @@ class RegistrationCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
         event = self.context["event"]
-        
-        return Registration.objects.create(
-            user=user,
-            event=event,
-            status = "registered",
-        )
+
+        try:
+            return Registration.objects.create(
+                user=user,
+                event=event,
+            )
+        except IntegrityError:
+            raise serializers.ValidationError("Registration already exists.")
 
 
 class RegistrationReadSerializer(serializers.ModelSerializer):
