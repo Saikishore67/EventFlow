@@ -23,8 +23,9 @@ class EventSerializer(serializers.ModelSerializer):
 class EventMiniSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = {
+        fields = [
             'id',
             'title',
-            'date',
-        }
+            'created_at',
+            'updated_at',
+        ]

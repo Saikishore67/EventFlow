@@ -26,7 +26,10 @@ class EventRegistrationAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         registration = serializer.save()
 
-        response_serializer = RegistrationReadSerializer(registration)
+        response_serializer = RegistrationReadSerializer(
+            registration,
+            context = {"request" : request}
+        )
 
         return Response(
             response_serializer.data,
