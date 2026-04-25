@@ -46,6 +46,12 @@ class RegistrationReadSerializer(serializers.ModelSerializer):
             'id',
             'event',
             'status',
+            'ticket_code',
+            'qr_code',
             'created_at',
         ]
-
+    def get_qr_code(self, obj):
+        request = self.context.get('request')
+        if obj.qr_code and request:
+            return request.build_absolute_uri(obj.qr_code.url)
+        return None
