@@ -11,8 +11,12 @@ venv/
 
 # Python cache
 __pycache__/
+*.py[cod]
+*.pyo
 *.pyc
 
+
+media/
 # OS junk
 .DS_Store
 Thumbs.db

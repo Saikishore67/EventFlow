@@ -18,7 +18,7 @@ def generate_qr_code(ticket_code):
     #generate a QR code for ticket code and save it to media/qrcodes/
     qr = qrcode.make(ticket_code)
 
-    qr_dir = os.path.join(django-settings.MEDIA_ROOT, 'qrcodes')
+    qr_dir = os.path.join(django_settings.MEDIA_ROOT, 'qrcodes')
     os.makedirs(qr_dir, exist_ok=True)
 
     filename = f"qr_{ticket_code}.png"
