@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Registration
 from .serializers import RegistrationCreateSerializer, RegistrationReadSerializer
 from apps.events.models import Event
+import os
 
 # Create your views here.
 
@@ -35,3 +36,37 @@ class EventRegistrationAPIView(APIView):
             response_serializer.data,
             status = status.HTTP_201_CREATED,
             )
+
+class MyRegistrationsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        registrations = Registration.objects.filter(user=request.user)
+        serializer = RegistrationReadSerializer(registrations,
+        many=True,
+        context={"request": request}
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class CancelRegistrationAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, registration_id):
+        registration = get_object_or_404(
+            Registration,
+            id=registration_id,
+            user=request.user
+        )
+
+        # Delete the OR code image file from disk
+        if registration.qr_code:
+            qr_path = registration.qr_code.path
+            if os.path.exists(qr_path):
+                os.remove(qr_path)
+        
+        registration.delete()
+
+        return Response(
+            {"message": "Registration cancelled successfully. Your spot has been released."},
+            status=status.HTTP_200_OK
+        )

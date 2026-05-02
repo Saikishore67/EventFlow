@@ -18,8 +18,10 @@ class RegistrationCreateSerializer(serializers.ModelSerializer):
 
         if Registration.objects.filter(user=user, event=event).exists():
             raise serializers.ValidationError("Already registered.")
+
+        active_registrations = Registration.objects.filter(event=event).exclude(status="cancelled").count()
         
-        if Registration.objects.filter(event=event).count() >= event.capacity:
+        if active_registrations >= event.capacity:
             raise serializers.ValidationError("Event is full")
         
         return attrs

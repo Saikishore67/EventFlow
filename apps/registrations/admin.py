@@ -6,6 +6,7 @@ from .models import Registration
 class RegistrationAdmin(admin.ModelAdmin):
     # What you see in the list view
     list_display = (
+        'id',
         'event_title',
         'user',
         'status',
