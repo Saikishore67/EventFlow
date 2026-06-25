@@ -29,5 +29,6 @@ urlpatterns = [
     path('api/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/registrations/', include('apps.registrations.urls')),
+    path('api/notifications/', include('apps.notifications.urls')),
     path('api/auth/', include('apps.accounts.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

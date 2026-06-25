@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.events',
     'apps.registrations',
-    # 'apps.notifications',
+    'apps.notifications',
     # 'apps.core',
 
     'drf_spectacular',

@@ -7,6 +7,7 @@ from .models import Registration
 from .serializers import RegistrationCreateSerializer, RegistrationReadSerializer
 from apps.events.models import Event
 import os
+from apps.notifications.models import Notification
 
 # Create your views here.
 
@@ -26,6 +27,13 @@ class EventRegistrationAPIView(APIView):
         )
         serializer.is_valid(raise_exception=True)
         registration = serializer.save()
+
+        Notification.objects.create(
+            user=request.user,
+            title="Registration confirmed",
+            message=f"You have successfully registered for {event.title}.",
+            notification_type=Notification.TYPE_REGISTRATION_CONFIRMED,
+        )
 
         response_serializer = RegistrationReadSerializer(
             registration,
@@ -64,7 +72,15 @@ class CancelRegistrationAPIView(APIView):
             if os.path.exists(qr_path):
                 os.remove(qr_path)
         
+        event_title = registration.event.title
         registration.delete()
+
+        Notification.objects.create(
+            user = request.user,
+            title = "Registration cancelled",
+            message = f"Your registration for {event_title} has been cancelled.",
+            notification_type = Notification.TYPE_REGISTRATION_CANCELLED,
+        )
 
         return Response(
             {"message": "Registration cancelled successfully. Your spot has been released."},
