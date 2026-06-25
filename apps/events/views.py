@@ -1,10 +1,12 @@
 from rest_framework import generics, permissions
+from rest_framework.response import Response
+from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-
+from rest_framework.exceptions import PermissionDenied
 from .models import Event
 from .serializers import EventSerializer
-from .permissions import IsEventOrganizer
+from .permissions import IsEventOrganizer, IsEventOwnerOrAdmin
 
 
 class EventListCreateAPIView(generics.ListCreateAPIView):
@@ -55,3 +57,33 @@ class EventListCreateAPIView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer): #Controls HOW an event is created
         serializer.save(organizer=self.request.user)
+
+class EventRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = EventSerializer
+    queryset = Event.objects.all()
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return []
+        return [
+            permissions.IsAuthenticated(),
+            IsEventOwnerOrAdmin(),
+        ]
+    
+    def get_object(self):
+        obj = super().get_object()
+
+        if self.request.method != "GET":
+            self.check_object_permissions(self.request, obj)
+
+            if not self.request.user.is_staff and not self.request.user.is_organizer:
+                raise PermissionDenied("Only organizers can modify this event.")
+        return obj 
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response(
+            {"message" : "Event deleted successfully."},
+            status = status.HTTP_200_OK
+        )
